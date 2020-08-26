@@ -1,7 +1,7 @@
 # VoiceCription
 It is very simple Web Application for doctors, which takes voice input that doctor ask their patient and and produces a Prescription.
 
-[! Main page](https://github.com/aakashdinkar/VoiceCription/blob/master/datafiles/Main.png)
+![Main page](https://github.com/aakashdinkar/VoiceCription/blob/master/datafiles/Main.png?raw=true)
 
 This Application first ask doctor to login or sign up.
 After Login it redirects to Doctor's Dashboard where doctor can see his/her Details.
