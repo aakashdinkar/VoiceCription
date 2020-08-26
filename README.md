@@ -26,7 +26,7 @@ On clicking + button Doctor will redirect to form page where doctor gives voice 
 
 On submiiting, a prescription is created and uploaded on doctor's Google Drive and Creates QRCode show it on next screen for patient.
 
-![qrscreen] (https://github.com/aakashdinkar/VoiceCription/blob/master/datafiles/qrcode.png?raw=true)
+![qrscreen](https://github.com/aakashdinkar/VoiceCription/blob/master/datafiles/qrcode.png?raw=true)
 
 Patient can now Scan the Qr Code for downloading his/her Prescription. 
 
