@@ -1,21 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <div>
-        <h1>Welcome {{ user.username }}</h1>
-        <img class="img-thumbnail" style="border-radius: 50%; max-width: 200px;" src="{{ auth0User.extra_data.picture }}"/>
-        <pre>{{ userdata }}</pre>
-    </div>
-
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -122,7 +104,7 @@ img{
 }
 
 #buttonp{
-  width: 30%;
+  width: 20%;
   background-color: #7999;
   font-size: 20px;
   color: black;
@@ -169,51 +151,19 @@ img{
     <h2 id="subtitle">Saving lives through digital prescriptions.</h2>
     <h3>{{ user.username }}'s Dashboard</h3>
   </header>
-  <div class="split left">
-    <div class="centered">
-        <img src="{{ auth0User.extra_data.picture }}" width="500" height="600"/></br>
-      <!-- <input type="file" name="upload" id="button1"></br> -->
-    </div>
-  </div>
-  <div class="split right">
-    <div class="centered">
-      <label 
-          for="name-label"
-          id="name"
-          name="name"
-          >Name: {{ user.first_name }}
-      </label>
-      <br>
-      <label 
-          for="email-label"
-          id="email"
-          nmae="email"
-          >Email: {{ user.email }}
-      </label><br>
-      <label 
-          for="id-label"
-          id="id"
-          name="id"
-          >ID No.: 123456DR65
-      </label><br><br>
-      <form method = "post" enctype="multipart/form-data" action="signature_upload"> 
-        {% csrf_token %} 
-        {{ form.as_p }} 
-        <button type="submit">Upload</button> 
+
+    <form action="show" method="POST">
+        {% csrf_token %}
+        <input type="text" name="title"><br><br>
+        <button type="submit" name="past" id="buttonp" onclick="location.href='{% url 'scriptshow' %}'">Past Records</button>
+    </br>
     </form>
-    <div class="col-md-4"> 
-       <img src="{{ signature.sign_upload.url }}" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;" /> 
-    </div> 
-    </div>
-  </div>
-<div class="container2">
-  <a href="/logout"><button type="button" name="signout" id="buttons">Signout</button></a></br>
-  <button type="button" name="past" id="buttonp" onclick="location.href='{% url 'scriptsearch' %}'">Past Records</button></br>
-</div>
-<div class="add">
-<i class="fa fa-plus-circle" style="font-size:36px; color: black;" onclick="location.href='{% url 'scriptII' %}'"></i></a>
+    </br>
+    <hr>
+    {{result.name}} : {{result.link}}
 </div>
     <div class="footer">
+        <button type="submit" name="past" id="buttonp" onclick="location.href='{% url 'scriptsearch' %}'">Back</button>
       <p>Copyright 2020 | VoiceCription | Early beta access</p>
     </div>
   </div>

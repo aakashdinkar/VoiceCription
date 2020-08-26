@@ -16,6 +16,8 @@ import json
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas   
+from .forms import *
+  
 
 @login_required
 def dashboard(request):
@@ -110,6 +112,7 @@ from reportlab.pdfgen import canvas
 import qrcode
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+from datetime import datetime, date
 
 def pdf(request):
     if request.method == 'POST':
@@ -124,23 +127,39 @@ def pdf(request):
     p.setFont("Times-Roman", 24)  
     p.drawString(400,800, "Dr. Octocat")
     p.drawString(400,775, "MBBS")
-    # p.drawImage("datafiles/1664c50e43535640ec7cc40d49b0b017.png", 45, 740, width = 100, height = 100)  
-    p.drawString(15,730,"_______________________________________________")
-    p.setFont("Times-Roman", 18)
-    p.drawString(100,700,f"Name                          :{dat[0]}")
-    p.drawString(100,680,f"Addres                        :{dat[1]}")
-    p.drawString(100,660,f"Age                             :{dat[2]}")
-    p.drawString(100,640,f"Contact No.                :{dat[3]}")
-    p.drawString(100,620,f"Symptoms                  :{dat[4]}")
-    p.drawString(100,600,f"Daignosis                   :{dat[5]}")
-    p.drawString(100,580,f"Medication                 :{dat[6]}")
+    p.drawImage("datafiles/logo.png", 45, 740, width = 100, height = 100) 
+    p.setFont("Times-Roman", 18) 
+    p.drawString(0,730,"_____________________________________________________________________")
+    now = datetime.now()
+    today = date.today()
+    d2 = today.strftime("%B %d, %Y")
+    current_time = now.strftime("%H:%M:%S")
+    p.drawString(50, 695, f"Date : {d2}")
+    p.drawString(400, 695, f"Time : {current_time}")
+    p.drawString(0,680,"_____________________________________________________________________")
+    p.drawString(100,650,f"Name                          :  {dat[0]}")
+    p.drawString(100,620,f"Addres                        :  {dat[1]}")
+    p.drawString(100,590,f"Age                             :  {dat[2]}")
+    p.drawString(100,560,f"Contact No.                :  {dat[3]}")
+    p.drawString(100,530,f"Symptoms                  :  {dat[4]}")
+    p.drawString(100,500,f"Daignosis                   :  {dat[5]}")
+    p.drawString(100,470,f"Medication                 :  {dat[6]}")
+    p.drawImage("media/images/sign.png", 400,200, width = 100, height = 100)
+    p.drawString(400, 180, "Doctor's Signature")
     p.showPage()  
     p.save()
-    return render(request, 'Voice/Last.html')
-
-def showqrcode(request):
     gauth = GoogleAuth()
-    gauth.LocalWebserverAuth()
+    gauth.LoadCredentialsFile("credentials.txt")
+    if gauth.credentials is None:
+        gauth.GetFlow()
+        gauth.flow.params.update({'access_type': 'offline'})
+        gauth.flow.params.update({'approval_prompt': 'force'})
+        gauth.LocalWebserverAuth()
+    elif gauth.access_token_expired:
+        gauth.Refresh()
+    else:
+        gauth.Authorize()
+    gauth.SaveCredentialsFile("credentials.txt")  
 
     drive = GoogleDrive(gauth)
     file = drive.CreateFile({'title':f"{dat[0]}"})
@@ -156,5 +175,62 @@ def showqrcode(request):
     qr.add_data(result)
     qr.make()
     img = qr.make_image()
-    img.save('qrcode.png')
-    return render(request, 'Voice/qr.html')
+    img.save('assets/qrcode.png')
+    return render(request, 'Voice/Last.html')
+
+def search(request):
+    return render(request, 'Voice/patient_record.html')
+
+def show(request):
+    name = None
+    link = None
+    if request.method == 'POST':
+        print("hello")
+        title = request.POST.get('title')
+        gauth = GoogleAuth()
+        gauth.LoadCredentialsFile("credentials.txt")
+        if gauth.credentials is None:
+            gauth.GetFlow()
+            gauth.flow.params.update({'access_type': 'offline'})
+            gauth.flow.params.update({'approval_prompt': 'force'})
+            gauth.LocalWebserverAuth()
+        elif gauth.access_token_expired:
+            gauth.Refresh()
+        else:
+            gauth.Authorize()
+        gauth.SaveCredentialsFile("credentials.txt")  
+
+        drive = GoogleDrive(gauth)
+
+        file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for item in file_list:
+            if item['title'] == title:
+                link = 'https://drive.google.com/file/d/' + item['id'] + '/view?usp=drivesdk'
+                name = item['title']
+                break
+
+    return render(request, 'Voice/patient_record.html',{'result':{'name':name, 'link':link}})
+
+def signature_upload(request): 
+  
+    if request.method == 'POST': 
+        form = SignatureForm(request.POST, request.FILES) 
+  
+        if form.is_valid(): 
+            form.save()
+            if request.method == 'GET':
+                sign = Signature.objects.all()  
+                return render((request, 'Voice/dashboard.html', 
+                        {'signature' : sign})) 
+            # return redirect('display_signature') 
+    else: 
+        form = SignatureForm() 
+    return render(request, 'Voice/dashboard.html', {'form' : form}) 
+
+# def display_signature(request):
+#      if request.method == 'GET':
+#         sign = Signature.objects.all()  
+#         return render((request, 'Voice/dashboard.html', 
+#                      {'signature' : sign}))
+    
+
