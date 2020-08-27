@@ -32,6 +32,21 @@ Patient can now Scan the Qr Code for downloading his/her Prescription.
 
 ![qr_code](https://github.com/aakashdinkar/VoiceCription/blob/master/datafiles/qr.png?raw=true)
 
+
+**How to run it ?**
+</br>
+Clone the repo:
+```bash
+$ cd VoiceCription
+$ python install -r requirements.txt
+$ python manage.py runserver 3000
+```
+Additionally for installing PyAudio, you have to install a package i.e.
+```bash
+$ pip install pipwin
+$ pipwin install pyaudio
+```
+
 To upload and extract prescription, I have used Google Drive API. To continue with this API, secret-credentials which you can download from login into [Developer Console](https://developers.google.com/drive). 
 After downloading your own credentials place in this directory with name **client_secrets.json**.
 ```bash
@@ -48,3 +63,7 @@ After downloading your own credentials place in this directory with name **clien
 └───VoiceCription
     └───__pycache__
 ```
+
+---
+
+**Feel free for requesting PRs to contribute or any modification.**
