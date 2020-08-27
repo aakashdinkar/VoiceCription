@@ -32,7 +32,19 @@ Patient can now Scan the Qr Code for downloading his/her Prescription.
 
 ![qr_code](https://github.com/aakashdinkar/VoiceCription/blob/master/datafiles/qr.png?raw=true)
 
-To upload and extract prescription, I have used Google Drive API. To continue with this API, secret-credentials which you can download from login into [Developer Console](https://developers.google.com/drive).
-
-
-
+To upload and extract prescription, I have used Google Drive API. To continue with this API, secret-credentials which you can download from login into [Developer Console](https://developers.google.com/drive). 
+After downloading your own credentials place in this directory with name **client_secrets.json**.
+```bash
+├───assets
+├───datafiles
+├───media
+│   └───images
+├───Voice
+│   ├───migrations
+│   │   └───__pycache__
+│   ├───templates
+│   │   └───Voice
+│   └───__pycache__
+└───VoiceCription
+    └───__pycache__
+```
