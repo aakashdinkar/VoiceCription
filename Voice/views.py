@@ -18,10 +18,13 @@ from django.http import FileResponse
 from reportlab.pdfgen import canvas   
 from .forms import *
   
-
+auth0user = None
+userdata = None
 @login_required
 def dashboard(request):
     user = request.user
+    global auth0user
+    global userdata
     auth0user = user.social_auth.filter(provider='auth0')[0]
     userdata = {
         'user_id': auth0user.uid,
@@ -32,7 +35,7 @@ def dashboard(request):
 
     return render(request, 'Voice/dashboard.html', {
         'auth0User': auth0user,
-        'userdata': json.dumps(userdata, indent=4)
+        'userdata': json.dumps(userdata, indent=4), 'id':'123876RFQW'
     })
 
 
@@ -212,7 +215,7 @@ def show(request):
     return render(request, 'Voice/patient_record.html',{'result':{'name':name, 'link':link}})
 
 def signature_upload(request): 
-  
+    sign = None
     if request.method == 'POST': 
         form = SignatureForm(request.POST, request.FILES) 
   
@@ -220,17 +223,12 @@ def signature_upload(request):
             form.save()
             if request.method == 'GET':
                 sign = Signature.objects.all()  
-                return render((request, 'Voice/dashboard.html', 
-                        {'signature' : sign})) 
-            # return redirect('display_signature') 
+                return render(request, 'Voice/dashboard.html',{
+        'auth0User': auth0user,
+        'userdata': json.dumps(userdata, indent=4), 'id':'123876RFQW'}) 
     else: 
         form = SignatureForm() 
-    return render(request, 'Voice/dashboard.html', {'form' : form}) 
-
-# def display_signature(request):
-#      if request.method == 'GET':
-#         sign = Signature.objects.all()  
-#         return render((request, 'Voice/dashboard.html', 
-#                      {'signature' : sign}))
-    
-
+    return render(request, 'Voice/dashboard.html', {
+        'auth0User': auth0user,
+        'userdata': json.dumps(userdata, indent=4),'signature' : 'Signature Uploaded !!!','form' : form, 'id':'123876RFQW'}) 
+ 
